@@ -10,8 +10,7 @@ const server = new McpServer({
   }
 });
 
-function main (){
-  console.log("apples");
+async function main (){
   
 }
 main()
