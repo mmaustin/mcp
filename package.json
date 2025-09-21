@@ -2,9 +2,11 @@
   "name": "mcp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server:build:": "tsc",
+    "server:build:watch:": "tsc --watch",
+    "server:dev": "tsx src/server.ts"
   },
   "repository": {
     "type": "git",
@@ -13,12 +15,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/mmaustin/mcp/issues"
   },
   "homepage": "https://github.com/mmaustin/mcp#readme",
   "devDependencies": {
+    "@types/node": "^24.5.2",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   }
 }
