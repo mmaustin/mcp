@@ -20,10 +20,35 @@ server.tool("create-user", "Create a new user in the database", {
   phone: z.string()
 }, {
   title: "Create User",
+  readOnlyHint: false,
+  destructiveHint: false,
+  idempotentHint: false,
+  openWorldHint: true
+}, async (params) => {
+  try {
+    const id = await createUser(params);
+    return {
+      content: [
+        {type: "text", text: `User ${id} created successfully.`}
+      ]
+    }
+  } catch {
+    return {
+      content: [
+        {type: "text", text: "Failed to save user"}
+      ]
+    }
+  }
+});
 
-}, async () => {
-  return {}
-})
+function createUser(user: {
+  name: string,
+  email: string,
+  address: string,
+  phone: string
+}) {
+  
+}
 
 async function main() {
   const transport = new StdioServerTransport();
