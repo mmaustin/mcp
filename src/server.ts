@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import fs from "node:fs/promises";
+import { title } from "node:process";
 
 
 const server = new McpServer({
@@ -13,6 +14,26 @@ const server = new McpServer({
     prompts: {},
   }
 });
+
+server.tool("delete-user", "Delete the las user from the database", {}, {title: "Delete User"},
+  async () => {
+    try {
+      const id = await deleteUser();
+      return {
+        content: [
+          {type: "text", text: `User ${id} has been deleted.`}
+        ]
+      }
+    } catch  {
+      return {
+        content: [
+          {type: "text", text: "Failed to delete user"}
+        ]
+      }
+      
+    }
+  }
+);
 
 server.tool("create-user", "Create a new user in the database", {
   name: z.string(),
@@ -56,7 +77,7 @@ async function createUser(user: {
   
   users.push({id, ...user});
 
-  await fs.writeFile("./src/data/users.json", JSON.stringify(users, null, 2));
+  await fs.writeFile("./src/data/user.json", JSON.stringify(users, null, 2));
 
   return id;
   
