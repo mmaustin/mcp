@@ -15,7 +15,7 @@ const server = new McpServer({
   }
 });
 
-server.tool("delete-user", "Delete the las user from the database", {}, {title: "Delete User"},
+server.tool("delete-user", "Delete the last user from the database", {}, {title: "Delete User"},
   async () => {
     try {
       const id = await deleteUser();
