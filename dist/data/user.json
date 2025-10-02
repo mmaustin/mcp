@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "name": "Pookie",
+        "email": "Pookie@sing.com",
+        "address": "111 rose st, mound bayou, ms",
+        "phone": "555-9999"
+    },
+    {
+        "id": 2,
+        "name": "Dookie",
+        "email": "Dookie@sing.com",
+        "address": "111 rose st, mound bayou, ms",
+        "phone": "555-9999"
+    },
+    {
+        "id": 3,
+        "name": "Mookie",
+        "email": "Mookie@sing.com",
+        "address": "111 rose st, mound bayou, ms",
+        "phone": "555-9999"
+    }
+]
