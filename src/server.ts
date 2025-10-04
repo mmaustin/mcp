@@ -15,28 +15,46 @@ const server = new McpServer({
   }
 });
 
-server.tool("delete-user", "Delete the last user from the database", {}, {title: "Delete User"},
+server.tool("delete-user", "Delete the last user from the database", {}, { title: "Delete User" },
   async () => {
     try {
       const id = await deleteUser();
       return {
         content: [
-          {type: "text", text: `User ${id} has been deleted.`}
+          { type: "text", text: `User ${id} has been deleted.` }
         ]
       }
-    } catch  {
+    } catch {
       return {
         content: [
-          {type: "text", text: "Failed to delete user"}
+          { type: "text", text: "Failed to delete user" }
         ]
-      }     
+      }
     }
   }
 );
 
-async function deleteUser(){
+server.resource("users", "users://all", {
+  description: "Get all users from the database",
+  title: "Users",
+  mimeType: "application/json",
+},
+  async uri => {
+    const users = await import("./data/user.json", {
+      with: { type: "json" }
+    }).then(m => m.default);
+
+    return {
+      content: [
+        { type: "text", text: `Users successfully fetched.` }
+      ]
+    }
+  }
+)
+
+async function deleteUser() {
   const users = await import("./data/user.json", {
-    with: {type: "json"}
+    with: { type: "json" }
   }).then(m => m.default);
 
   const id = users.length;
@@ -44,7 +62,7 @@ async function deleteUser(){
   users.pop();
 
   await fs.writeFile("./src/data/user.json", JSON.stringify(users, null, 2));
-  
+
   return id;
 }
 
@@ -55,17 +73,17 @@ async function createUser(user: {
   phone: string
 }) {
   const users = await import("./data/user.json", {
-    with: {type: "json"}
+    with: { type: "json" }
   }).then(m => m.default);
-  
+
   const id = users.length + 1;
-  
-  users.push({id, ...user});
-  
+
+  users.push({ id, ...user });
+
   await fs.writeFile("./src/data/user.json", JSON.stringify(users, null, 2));
-  
+
   return id;
-  
+
 };
 
 server.tool("create-user", "Create a new user in the database", {
@@ -84,13 +102,13 @@ server.tool("create-user", "Create a new user in the database", {
     const id = await createUser(params);
     return {
       content: [
-        {type: "text", text: `User ${id} created successfully.`}
+        { type: "text", text: `User ${id} created successfully.` }
       ]
     }
   } catch {
     return {
       content: [
-        {type: "text", text: "Failed to save user"}
+        { type: "text", text: "Failed to save user" }
       ]
     }
   }
