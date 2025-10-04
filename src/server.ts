@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import fs from "node:fs/promises";
@@ -45,8 +45,34 @@ server.resource("users", "users://all", {
     }).then(m => m.default);
 
     return {
-      content: [
-        { type: "text", text: `Users successfully fetched.` }
+      contents: [
+        {
+          uri: uri.href,
+          text: JSON.stringify(users),
+          mimeType: "application/json",
+        }
+      ]
+    }
+  }
+);
+
+server.resource("user-details", new ResourceTemplate("users://{userID}/profile", {list: undefined}), {
+  description: "Get user details from the database",
+  title: "User Details",
+  mimeType: "application/json",
+},
+  async uri => {
+    const users = await import("./data/user.json", {
+      with: { type: "json" }
+    }).then(m => m.default);
+
+    return {
+      contents: [
+        {
+          uri: uri.href,
+          text: JSON.stringify(users),
+          mimeType: "application/json",
+        }
       ]
     }
   }
