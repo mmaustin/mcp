@@ -56,7 +56,7 @@ server.resource("users", "users://all", {
   }
 );
 
-server.resource("user-details", new ResourceTemplate("user://{userID}/profile", { list: undefined }), {
+server.resource("user-details", new ResourceTemplate("user://{userId}/profile", { list: undefined }), {
   description: "Get user details from the database",
   title: "User Details",
   mimeType: "application/json",
@@ -66,7 +66,7 @@ server.resource("user-details", new ResourceTemplate("user://{userID}/profile", 
       with: { type: "json" }
     }).then(m => m.default);
     
-    const user = users.find(u => u.id === parseInt(userId as string));
+    const user = users.find(u => u.id.toString() === userId) || {id: 99, name: "chauncey", email: "asdf@email.com", address: "123 way place", phone: "123-456-7890"};
 
     if (user === null){
       return {
@@ -92,7 +92,7 @@ server.resource("user-details", new ResourceTemplate("user://{userID}/profile", 
   }
 );
 
-server.registerResource(
+server.resource(
   'greeting',
   new ResourceTemplate('greeting://{name}', { list: undefined }),
   {
