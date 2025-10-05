@@ -56,27 +56,58 @@ server.resource("users", "users://all", {
   }
 );
 
-server.resource("user-details", new ResourceTemplate("users://{userID}/profile", {list: undefined}), {
+server.resource("user-details", new ResourceTemplate("user://{userID}/profile", { list: undefined }), {
   description: "Get user details from the database",
   title: "User Details",
   mimeType: "application/json",
 },
-  async uri => {
+  async (uri, {userId}) => {
     const users = await import("./data/user.json", {
       with: { type: "json" }
     }).then(m => m.default);
+    
+    const user = users.find(u => u.id === parseInt(userId as string));
+
+    if (user === null){
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            text: JSON.stringify({error: "User not found"}),
+            mimeType: "application/json"
+          }
+        ]
+      }
+    }
 
     return {
       contents: [
         {
           uri: uri.href,
-          text: JSON.stringify(users),
+          text: JSON.stringify(user),
           mimeType: "application/json",
         }
       ]
     }
   }
-)
+);
+
+server.registerResource(
+  'greeting',
+  new ResourceTemplate('greeting://{name}', { list: undefined }),
+  {
+      title: 'Greeting Resource', // Display name for UI
+      description: 'Dynamic greeting generator'
+  },
+  async (uri, { name }) => ({
+      contents: [
+          {
+              uri: uri.href,
+              text: `Hello, ${name}!`
+          }
+      ]
+  })
+);
 
 async function deleteUser() {
   const users = await import("./data/user.json", {
