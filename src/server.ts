@@ -154,9 +154,18 @@ server.tool("add-property", "Add a property to an existing user", {
   openWorldHint: true
 }, async (params) => {
   try {
-    
-  } catch (error) {
-    
+    const newUsers = await addProperty(params);
+    return {
+      content: [
+        {type: "text", text: "You've got new properties, bub1"}
+      ]
+    }
+  } catch {
+    return {
+      content: [
+        { type: "text", text: "Failed to add properties" }
+      ]
+    }
   }
 })
 
