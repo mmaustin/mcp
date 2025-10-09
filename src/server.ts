@@ -143,6 +143,23 @@ async function createUser(user: {
 
 };
 
+server.tool("add-property", "Add a property to an existing user", {
+  key: z.string(),
+  value: z.string()
+}, {
+  title: "Add Property",
+  readOnlyHint: false,
+  destructiveHint: false,
+  idempotentHint: false,
+  openWorldHint: true
+}, async (params) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+})
+
 server.tool("create-user", "Create a new user in the database", {
   name: z.string(),
   email: z.string(),
