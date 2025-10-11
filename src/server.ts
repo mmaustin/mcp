@@ -156,7 +156,7 @@ const addProperty = async(property: {key: string, greeting: string }) => {
     newUsers.push(userWithGreetingProperty);
   };
 
-  await fs.writeFile("./src/data/user.json", JSON.stringify(users, null, 2));
+  await fs.writeFile("./src/data/user.json", JSON.stringify(newUsers, null, 2));
 
   return newUsers;
   
