@@ -143,9 +143,28 @@ async function createUser(user: {
 
 };
 
+const addProperty = async(property: {key: string, greeting: string }) => {
+  const users = await import("./data/user.json", {
+    with: { type: "json" }
+  }).then(m => m.default);
+
+  const newUsers = [];
+
+  for(const user of users){
+    const newGreeting = `I'm ${user.name}, and this is my greeting: ${property.greeting}`;
+    const userWithGreetingProperty = {[property.key]: newGreeting, ...user};
+    newUsers.push(userWithGreetingProperty);
+  };
+
+  await fs.writeFile("./src/data/user.json", JSON.stringify(users, null, 2));
+
+  return newUsers;
+  
+};
+
 server.tool("add-property", "Add a property to an existing user", {
   key: z.string(),
-  value: z.string()
+  greeting: z.string()
 }, {
   title: "Add Property",
   readOnlyHint: false,
@@ -167,7 +186,9 @@ server.tool("add-property", "Add a property to an existing user", {
       ]
     }
   }
-})
+});
+
+
 
 server.tool("create-user", "Create a new user in the database", {
   name: z.string(),
