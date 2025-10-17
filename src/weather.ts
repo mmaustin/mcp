@@ -51,10 +51,31 @@ server.tool(
           },
         ],
       };
-    }
+    };
     const features = alertsData.features || [];
-  }
-)
+    if(features.length){
+      return {
+        content: [
+          {
+            type: "text", text: `No active alerts for ${stateCode}`,
+          },
+        ],
+      };
+    }
+
+    const formattedAlerts = features.map(formatAlert);
+    const alertsText = `Active alerts for ${stateCode}: \n\n${formattedAlerts.join("\n")}`;
+
+    return {
+      content: [
+        {
+          type: "text", text: alertsText,
+        },
+      ],
+    };
+  },
+);
+
 
 interface AlertFeature {
   properties: {
