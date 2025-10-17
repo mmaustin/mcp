@@ -2,7 +2,7 @@ import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mc
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
-const nws_api_base = "https://api.weather.gov";
+const NWS_API_BASE = "https://api.weather.gov";
 const USER_AGENT = "weather-app/1.0";
 
 const server = new McpServer({
@@ -31,6 +31,30 @@ async function makeNWSRequest<T>(url: string): Promise<T | null> {
     return null;
   };
 };
+
+server.tool(
+  "get_alerts",
+  "Get weather alerts for a state",
+  {
+    state: z.string().length(2).describe("Two-letter state code (e.g. CA, NY)"),
+  },
+  async ({state}) => {
+    const stateCode = state.toUpperCase();
+    const alertsUrl = `${NWS_API_BASE}/alerts?area=${stateCode}`;
+    const alertsData = await makeNWSRequest<AlertsResponse>(alertsUrl);
+
+    if(!alertsData){
+      return {
+        content: [
+          {
+            type: "text", text: "Failed to retrieve alerts data",
+          },
+        ],
+      };
+    }
+    const features = alertsData.features || [];
+  }
+)
 
 interface AlertFeature {
   properties: {
@@ -64,7 +88,7 @@ interface ForecastPeriod {
 };
 
 interface AlertsResponse {
-  feature: AlertFeature[];
+  features: AlertFeature[];
 };
 
 interface PointsResponse {
